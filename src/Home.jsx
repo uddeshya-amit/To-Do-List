@@ -162,8 +162,7 @@ function TodoApp() {
 									</div>
 								);
 							})}
-					</div>
-					<div className="p-4">
+
 						{completedScreen === true &&
 							completed.map((singleTask, index) => {
 								return (
