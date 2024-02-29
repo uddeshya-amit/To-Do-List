@@ -10,35 +10,30 @@ function TodoApp() {
 	const [description, setDiscription] = useState("");
 
 	function handleAddTask() {
-		if (task) {
-			let newTAsk = {
-				title: task,
-				objective: description,
-			};
-			let updatedTasks = [...allTask];
-			updatedTasks.push(newTAsk);
-			setAllTask(updatedTasks);
-			localStorage.setItem("todolist", JSON.stringify(updatedTasks));
-			setTask("");
-			setDiscription("");
-		}
-		return;
+		if (!task || !description)
+			return alert("Please fill the task and description");
+
+		let newTAsk = {
+			title: task,
+			objective: description,
+		};
+		setAllTask((prev) => [...prev, newTAsk]);
+		localStorage.setItem("todolist", JSON.stringify([...allTask, newTAsk]));
+		setTask("");
+		setDiscription("");
 	}
 
 	function handelDelete(index) {
-		let leftTodos = [...allTask];
-		leftTodos.splice(index, 1);
+		let leftTodos = allTask.filter((_, i) => i !== index);
 		localStorage.setItem("todolist", JSON.stringify(leftTodos));
-		setAllTask(leftTodos);
+		setAllTask((prev) => leftTodos);
 	}
 
 	function handelCompletedTAsk(index) {
-		let completedTask = {
-			...allTask[index],
-		};
+		let completedTask = allTask[index];
 		let updatedCompletedTask = [...completed];
 		updatedCompletedTask.push(completedTask);
-		setIsCompleted(updatedCompletedTask);
+		setIsCompleted((prev) => updatedCompletedTask);
 		localStorage.setItem(
 			"completedTasks",
 			JSON.stringify(updatedCompletedTask)
@@ -103,6 +98,7 @@ function TodoApp() {
 								placeholder="description"
 								value={description}
 								onChange={(e) => setDiscription(e.target.value)}
+								onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
 							/>
 						</div>
 					</div>
